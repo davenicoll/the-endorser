@@ -1,7 +1,7 @@
 import glob, imp, os
 
 IPHONE_UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/14A403 Safari/602.1"
-
+MAC_CHROME_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36"
 
 def discover_drivers():
     cdir = os.path.dirname(os.path.realpath(__file__))

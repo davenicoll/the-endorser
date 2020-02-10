@@ -1,5 +1,6 @@
 import os
 from drivers import IPHONE_UA
+from drivers import MAC_CHROME_UA
 from selenium import webdriver
 
 
@@ -9,7 +10,7 @@ def get(driver_path):
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('headless')
-    chrome_options.add_argument('window-size=1024x3000')
-    chrome_options.add_argument("user-agent=" + IPHONE_UA)
+    #chrome_options.add_argument('window-size=1024x3000')
+    chrome_options.add_argument("user-agent=" + MAC_CHROME_UA)
 
-    return webdriver.Chrome(executable_path=driver_path, chrome_options=chrome_options)
+    return webdriver.Chrome(executable_path=driver_path, options=chrome_options)

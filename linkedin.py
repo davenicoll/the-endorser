@@ -98,20 +98,27 @@ class LinkedInClient:
             pass
 
         time.sleep(1)
-        name = self.webdriver.find_element_by_css_selector(".pv-top-card-v3--list > li").text
-        dist = "self" if user_id in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card-v3__distance-badge .dist-value").text.strip()
+        name = self.webdriver.find_element_by_css_selector(".pv-top-card--list > li").text
+        dist = "self" if user_id in profile_url else self.webdriver.find_element_by_css_selector(".pv-top-card__distance-badge .dist-value").text.strip()
 
         if dist is "":
             logging.warning("%s is not in your network. We may not be able to retrieve any endorsements...", name)
 
         # do we have any endorsements to parse?
-        try:
-            self.webdriver.find_element_by_css_selector("button.pv-skills-section__additional-skills").click()
-            self.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector(".pv-skill-categories-section__top-skills"))
-            self.webdriver.execute_script("window.scrollBy(0, -200);") # backin' up, backin' up
-        except NoSuchElementException:
-            logging.error("%s doesn't have any endorsements or has hidden them!", name)
-            return
+        #try:
+        #data = self.webdriver.find_element_by_css_selector("#ember121")
+        #logging.info("data:%s", data)
+        self.webdriver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+        self.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector("#ember89"))
+        #sself.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector("#ember121"))
+        time.sleep(3)
+        self.webdriver.find_element_by_css_selector("button.pv-skills-section__additional-skills").click()
+        self.webdriver.execute_script("arguments[0].scrollIntoView();", self.webdriver.find_element_by_css_selector(".pv-skill-categories-section__top-skills"))
+            #self.webdriver.execute_script("window.scrollBy(0, -200);") # backin' up, backin' up
+        #except NoSuchElementException:
+        #    logging.error("%s doesn't have any endorsements or has hidden them!", name)
+        #    return
 
         skills_elements = self.webdriver.find_elements_by_css_selector("li.pv-skill-category-entity")
         logging.info("Fetching %s skills for %s (%s).", len(skills_elements), name, ("0" if dist == "" else dist) if dist is not None else "self")
@@ -134,12 +141,15 @@ class LinkedInClient:
                 ActionChains(self.webdriver).key_down(Keys.SHIFT).click(skill_anchor).key_up(Keys.SHIFT).perform()
                 self.webdriver.switch_to_window(self.webdriver.window_handles[-1])
 
-                waiter = WebDriverWait(self.webdriver, self.timeout)
-                waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".pv-profile-detail__content")))
-                self.__scroll_to_bottom(self.webdriver.find_element_by_css_selector(".pv-profile-detail__content"))
+                #waiter = WebDriverWait(self.webdriver, self.timeout)
+                #waiter.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".pv-profile-detail__content")))
+                #self.__scroll_to_bottom(self.webdriver.find_element_by_css_selector(".pv-profile-detail__content"))
+                time.sleep(5)
 
                 for endorser_element in self.webdriver.find_elements_by_css_selector(".pv-endorsement-entity__link"):
                     endorsers.append(endorser_element.find_element_by_css_selector(".pv-endorsement-entity__name--has-hover").text)
+
+                logging.info(endorsers)
 
                 self.webdriver.close()
                 self.webdriver.switch_to_window(profile_handle)
